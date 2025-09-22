@@ -1,58 +1,72 @@
 
-
-
 const formulario1 = document.querySelector('#formulario1');
-const inputMinimo = document.querySelector('#numMinimo');
-const inputMaximo = document.querySelector('#numMaximo');
+    const inputMinimo = document.querySelector('#numMinimo');
+    const inputMaximo = document.querySelector('#numMaximo');
 
-const formulario2 = document.querySelector('#formulario2');
-const inputNumero = document.querySelector('#numero');
+    const formulario2 = document.querySelector('#formulario2');
+    const inputNumero = document.querySelector('#numero');
 
-let mensage = document.querySelector('#mensaje');
-let num = cargarDesdeLocalStorage();
-console.log('numero cargado', num)
+    let mensaje = document.querySelector('#mensaje');
+    let numeroSecreto = cargarDesdeLocalStorage();
 
-formulario1.addEventListener('submit',e =>{
+    // --- Establecer rango ---
+    formulario1.addEventListener('submit', e => {
+        e.preventDefault();
 
-    let minimo = Number(inputMinimo.value);
-    let maximo = Number(inputMaximo.value);
+        let minimo = Number(inputMinimo.value);
+        let maximo = Number(inputMaximo.value);
 
-    // console.log(minimo + maximo);
+        if (isNaN(minimo) || isNaN(maximo)) {
+            mensaje.textContent = "Debes ingresar valores válidos.";
+            return;
+        }
 
-    let adivina = numeroAleatorio(minimo,maximo);
-    localStorage.setItem('dato', adivina);
-    console.log(adivina);
-})
+        if (minimo >= maximo) {
+            mensaje.textContent = "El número mínimo debe ser menor que el máximo.";
+            return;
+        }
 
+        numeroSecreto = numeroAleatorio(minimo, maximo);
+        localStorage.setItem('numeroSecreto', numeroSecreto);
+        mensaje.textContent = `Número secreto generado entre ${minimo} y ${maximo}. ¡Adivina! 🎯`;
+        console.log("Secreto:", numeroSecreto);
+    });
 
-function numeroAleatorio(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+    // --- Intento de adivinar ---
+    formulario2.addEventListener('submit', e => {
+        e.preventDefault();
 
-function cargarDesdeLocalStorage(){
-    try{
-        let guardar = localStorage.getItem('dato');
-        return guardar ? Number(guardar) : 0;
-    }catch(error){
-        console.log('No se pudo cargar',error.message)
-        return 0;
+        let numero = Number(inputNumero.value);
+
+        if (isNaN(numero)) {
+            mensaje.textContent = "Ingresa un número válido.";
+            return;
+        }
+
+        if (numero === numeroSecreto) {
+            mensaje.textContent = "🎉 ¡Adivinaste!";
+            localStorage.removeItem('numeroSecreto');
+        } else if (numero > numeroSecreto) {
+            mensaje.textContent = "El número secreto es menor.";
+        } else {
+            mensaje.textContent = "El número secreto es mayor.";
+        }
+
+        inputNumero.value = ""; // limpiar input
+        inputNumero.focus();
+    });
+
+    // --- Funciones auxiliares ---
+    function numeroAleatorio(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-}
 
-
-formulario2.addEventListener('submit', e =>{
-    e.preventDefault();
-
-    let numero = Number(inputNumero.value);
-    if(numero === num){
-        mensage.textContent = "Adivinaste";
-        localStorage.clear();
-        location.reload(true);
-    }else if(numero > num){
-        mensage.textContent = "El número es menor";
-    }else if(numero < num){
-        mensage.textContent = "El número es mayor";
-
+    function cargarDesdeLocalStorage() {
+        try {
+            let guardado = localStorage.getItem('numeroSecreto');
+            return guardado ? Number(guardado) : null;
+        } catch (error) {
+            console.log("Error al cargar:", error.message);
+            return null;
+        }
     }
-
-})
