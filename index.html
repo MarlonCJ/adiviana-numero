@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Adiva Numero</title>
+
+</head>
+<body>
+    
+    <div class="container">
+        <main class="main">
+            <div>
+                <h1>Adivina Numero</h1>
+                <p>Establece los Rangos</p>
+            </div>
+            <form id="formulario1">
+                <div class="rango">
+                    <div class="input-rango">
+                        <label for="numMinimo">Minimo</label>
+                        <input type="number" id="numMinimo">
+                    </div>
+                    <div class="input-rango">
+                        <label for="numMaximo">Maximo</label>
+                        <input type="number" id="numMaximo">
+                    </div>
+                    <button type="submit">Establecer Rango</button>
+                </div>
+            </form>
+
+            <span id="mensaje"></span>
+
+            <form id="formulario2">
+                <input type="number" id="numero">
+                <button type="submit" id="btnAdivina">Adivinar</button>
+            </form>
+        </main>
+    </div>
+
+
+    <script src="js/script.js"></script>
+</body>
+</html>
